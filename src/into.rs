@@ -57,6 +57,13 @@ pub fn nu_to_rmpv(value: Value) -> Result<rmpv::Value, LabeledError> {
             rmpv::Value::Array(vals?)
         }
 
+        Value::CustomValue { val, internal_span } => {
+            let val = val.to_base_value(internal_span)?;
+            nu_to_rmpv(val)?
+        }
+
+        Value::LazyRecord { val, .. } => nu_to_rmpv(val.collect()?)?,
+
         // Convert anything we can't represent in msgpck to nil
         // Pretty sure this is how `to json` does it.
         _ => rmpv::Value::Nil,
@@ -64,8 +71,6 @@ pub fn nu_to_rmpv(value: Value) -> Result<rmpv::Value, LabeledError> {
         //Value::Closure { val, .. } => todo!(),
         //Value::Error { error, .. } => todo!(),
         //Value::CellPath { val, .. } => todo!(),
-        //Value::CustomValue { val, .. } => todo!(),
-        //Value::LazyRecord { val, .. } => todo!(),
         //Value::MatchPattern { val, .. } => todo!(),
     })
 }
