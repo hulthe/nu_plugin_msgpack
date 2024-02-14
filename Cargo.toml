@@ -2,6 +2,10 @@
 name = "nu_plugin_msgpack"
 version = "0.90.1"
 edition = "2021"
+description = "Commands to convert nushell data to and from MsgPack"
+repository = "https://github.com/hulthe/nu_plugin_msgpack/"
+license = "MPL-2.0"
+readme = "README.md"
 
 [dependencies]
 chrono = "0.4.31"
