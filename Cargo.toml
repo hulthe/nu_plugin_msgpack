@@ -1,12 +1,10 @@
 [package]
 name = "nu_plugin_msgpack"
-version = "0.1.0"
+version = "0.90.1"
 edition = "2021"
 
 [dependencies]
-bytemuck = "1.14.0"
 chrono = "0.4.31"
-nu-plugin = "0.87.1"
-nu-protocol = "0.87.1"
-rend = { version = "0.4.1", features = ["bytemuck"] }
+nu-plugin = "0.90.1"
+nu-protocol = "0.90.1"
 rmpv = "1.0.1"

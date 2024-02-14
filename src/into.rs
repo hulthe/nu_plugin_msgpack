@@ -1,5 +1,5 @@
 use nu_plugin::LabeledError;
-use nu_protocol::{Record, Value};
+use nu_protocol::Value;
 
 /// Convert [nu_protocol::Value] to a [rmpv::Value].
 pub fn nu_to_rmpv(value: Value) -> Result<rmpv::Value, LabeledError> {
@@ -16,11 +16,9 @@ pub fn nu_to_rmpv(value: Value) -> Result<rmpv::Value, LabeledError> {
         }
 
         // Convert record to map.
-        Value::Record { val, .. } => {
-            let Record { cols, vals } = val;
-            let pairs: Result<_, LabeledError> = cols
+        Value::Record { val: record, .. } => {
+            let pairs: Result<_, LabeledError> = record
                 .into_iter()
-                .zip(vals)
                 .map(|(k, v)| Ok((k.into(), nu_to_rmpv(v)?)))
                 .collect();
 

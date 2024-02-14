@@ -33,15 +33,13 @@ pub fn rmpv_to_nu(value: rmpv::ValueRef<'_>) -> Result<Value, LabeledError> {
             Value::list(vs?, span)
         }
         rmpv::ValueRef::Map(map) => {
-            let mut cols = Vec::new();
-            let mut vals = Vec::new();
+            let mut record = Record::new();
 
             for (k, v) in map {
-                cols.push(rmpv_to_nu(k)?.as_string()?);
-                vals.push(rmpv_to_nu(v)?);
+                record.insert(rmpv_to_nu(k)?.as_string()?, rmpv_to_nu(v)?);
             }
 
-            Value::record(Record { cols, vals }, span)
+            Value::record(record, span)
         }
         rmpv::ValueRef::Ext(discriminant, data) => {
             match discriminant {
@@ -55,13 +53,13 @@ pub fn rmpv_to_nu(value: rmpv::ValueRef<'_>) -> Result<Value, LabeledError> {
 
 /// Convert a msgpack ext value with an unrecognized type to a nu record.
 fn unknown_ext_to_nu(discriminant: i8, data: &[u8]) -> Value {
-    let record = Record {
-        cols: vec!["ext_type".into(), "data".into()],
-        vals: vec![
-            Value::int(discriminant.into(), Span::unknown()),
-            Value::binary(data, Span::unknown()),
-        ],
-    };
+    let record = [
+        ("ext_type", Value::int(discriminant.into(), Span::unknown())),
+        ("data", Value::binary(data, Span::unknown())),
+    ]
+    .into_iter()
+    .map(|(k, v)| (k.to_string(), v))
+    .collect();
 
     Value::record(record, Span::unknown())
 }

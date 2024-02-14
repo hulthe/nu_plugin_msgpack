@@ -29,6 +29,7 @@ impl Plugin for FromMsgpack {
     fn run(
         &mut self,
         name: &str,
+        _config: &Option<Value>,
         _call: &EvaluatedCall,
         input: &Value,
     ) -> Result<Value, LabeledError> {
